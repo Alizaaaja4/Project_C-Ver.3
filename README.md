@@ -18,7 +18,7 @@ smooth transactions within the platform.
 - Delete artisan accounts and products
 - View list of buyer accounts, (A -> Z)
 - Delete buyer accounts
-- View feedback from buyers on products/artisans
+- View feedback from buyers on products
 
 #### Artisan Mode
 - Sign Up and Sign In
@@ -28,6 +28,7 @@ smooth transactions within the platform.
 
 #### Buyer Mode
 - Sign Up and Sign In
+- View profile user
 - Browse and search for products
 - Add products to cart and make purchases
 - Send messages to artisans in the chatbox menu

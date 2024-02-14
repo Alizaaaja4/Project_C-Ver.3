@@ -16,7 +16,7 @@ To access the features of D'Craftopia, use the following credentials:
 
 ## Get Started ▶️
 ### Clone the Repository
-    git clone https://github.com/Alizaaaja4/Shell_PlayStore.git
+    git clone https://github.com/Alizaaaja4/Project_C-Ver.3.git
 
 ### Run my Programs with
     gcc DCraftopia.c -o DCraftopia

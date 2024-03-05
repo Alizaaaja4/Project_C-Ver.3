@@ -248,6 +248,91 @@ void view_bubblesort_list_prem(int banyakakunprem, struct User usernya[]){
     }
 }
 
+void akun_prem(){
+   int banyakakunprem = 0;
+
+   DataPrem = fopen("Daftar Akun Premium.dat", "rb");
+
+   if (DataPrem == NULL){
+    printf("Sedang Mencari data.... \n"); sleep(2);
+    printf("Saat ini tidak user yang mendaftar akun premium!!\n");
+    system("pause"); system("cls");
+    dash_akun();
+   }
+   while(fread(&usernya[banyakakunprem], sizeof(struct User), 1, DataPrem)==1){
+        banyakakunprem++;
+   }
+
+   fclose(DataPrem);
+
+   bubblesort_list_prem(banyakakunprem, usernya);
+   printf("             ---- Daftar Akun Premium ----          \n");
+   printf("----------------------------------------------------\n");
+   view_bubblesort_list_prem(banyakakunprem, usernya);
+
+    system("pause"); system("cls");
+
+    dash_akun();
+
+}
+
+void bubblesort_list_norm(int banyakakunnorm, struct User usernya[]){
+    int i, j;
+
+    for(i=0; i<banyakakunnorm; i++){
+        for(j=0; j<banyakakunnorm -i -1; j++){
+            if(strcmp(usernya[j].Nama, usernya[j+1].Nama)>0){
+                temp = usernya[j];
+                usernya[j] = usernya[j+1];
+                usernya[j+1] = temp;
+            }
+        }
+    }
+}
+
+void view_bubblesort_list_norm(int banyakakunnorm, struct User usernya[]){
+    int i;
+
+    for(i=0; i<banyakakunnorm; i++){
+        printf("%d. Nama Lengkap: %s\n", i+1, usernya[i].Nama);
+        printf("---------------------------------------------\n");
+        printf("Pekerjaan       : %s\n", usernya[i].pekerjaan);
+        printf("---------------------------------------------\n");
+        printf("Email           : %s\n", usernya[i].email);
+        printf("Kontak          : %s\n", usernya[i].kontak);
+        printf("Alamat          : %s\n", usernya[i].alamat);
+        printf("---------------------------------------------\n");
+        printf("\n");
+    }
+}
+
+void akun_norm(){
+    int banyakakunnorm = 0;
+
+   DataNorm = fopen("Daftar Akun Normal.dat", "rb");
+
+   if (DataNorm == NULL){
+    printf("Sedang Mencari data.... \n"); sleep(2);
+    printf("Saat ini tidak user yang mendaftar akun premium!!\n");
+    system("pause"); system("cls");
+    dash_akun();
+   }
+   while(fread(&usernya[banyakakunnorm], sizeof(struct User), 1, DataNorm)==1){
+        banyakakunnorm++;
+   }
+
+   fclose(DataNorm);
+
+   bubblesort_list_norm(banyakakunnorm, usernya);
+   printf("             ---- Daftar Akun Silver ----           \n");
+   printf("----------------------------------------------------\n");
+   view_bubblesort_list_norm(banyakakunnorm, usernya);
+
+    system("pause"); system("cls");
+
+    dash_akun();
+}
+
 void dash_akun(){
     int menu;
     ban_DLinkedln();

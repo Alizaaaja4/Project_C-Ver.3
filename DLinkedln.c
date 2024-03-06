@@ -50,6 +50,7 @@ FILE *DataLowongan;
 FILE *DataLowongan_backup;
 FILE *DataPrem;
 FILE *DataNorm;
+FILE *DataNorm_backup;
 FILE *Notif;
 FILE *Notif_kirim;
 
@@ -119,7 +120,7 @@ void add_lowongan(){
 
 void delate_lowongan(){
     char hapusperusahaan[100], posisipekerjaan[100], open[100], close[100];
-    int ditemukan =0, banyaklowongan;
+    int ditemukan =0;
 
     ban_DLinkedln();
 
@@ -144,8 +145,7 @@ void delate_lowongan(){
         }
     }
 
-    fclose(DataLowongan);
-    fclose(DataLowongan_backup);
+    fclose(DataLowongan); fclose(DataLowongan_backup);
 
     remove("Daftar Lowongan Pekerjaan.dat");
     rename("Daftar Lowongan Pekerjaan backup.dat", "Daftar Lowongan Pekerjaan.dat");
@@ -159,7 +159,6 @@ void delate_lowongan(){
         printf("Loading....\n"); sleep(2);
         printf("Lowongan Pekerjaan di %s dengan posisi %s tidak ditemukan\n!!", hapusperusahaan, posisipekerjaan);
     }
-
     system("pause"); system("cls");
     dash_admin();
 }
@@ -312,7 +311,7 @@ void view_bubblesort_list_norm(int banyakakunnorm, struct User usernya[]){
     for(i=0; i<banyakakunnorm; i++){
         printf("%d. Nama Lengkap: %s\n", i+1, usernya[i].Nama);
         printf("---------------------------------------------\n");
-        printf("Pekerjaan       : %s\n", usernya[i].pekerjaan);
+        printf("Pendidikan       : %s\n", usernya[i].pendidikan);
         printf("---------------------------------------------\n");
         printf("Email           : %s\n", usernya[i].email);
         printf("Kontak          : %s\n", usernya[i].kontak);
@@ -414,11 +413,12 @@ void acc_notifikasi(){
         fwrite(&user, sizeof(struct User), 1, Notif_kirim);
         fclose(Notif_kirim);
 
-        printf("\nPesan dalam proses pengiriman....\n"); sleep(2); system("pasue"); 
+        printf("\nPesan dalam proses pengiriman....\n"); sleep(2); 
+        printf("Kembali ke menu utama\n\n"); system("pause"); system("cls");
         dash_admin();
     }
     else if (pilih == 'N' || pilih == 'n'){
-        system("cls"); printf("Proses kembali ke menu utama...\n"); sleep(2);
+        printf("Proses kembali ke menu utama...\n"); sleep(2);
         system("pause");  system("cls"); dash_admin();
     } 
 }
@@ -1191,6 +1191,57 @@ void search_lowongan_norm(){
     system("pause"); system("cls"); view_profile_norm();
 }
 
+void upgrade_akun_prem(){
+    char pilih, hapususername[30], hapusemail[30], hapuspass[30];
+    int ditemukan = 0;
+
+    printf("System: Apakah anda akan melakukan upgrade akun?\n"); sleep(2);
+    printf("System: Informasi anda di akun ini akan terhapus semua!!\n"); sleep(2);
+    printf("System: Tetap akan melajutkan? \n"); sleep(1);
+    printf("(y or n) /> "); scanf("%c", &pilih); getchar();
+
+    if(pilih== 'y' || pilih == 'Y'){
+        printf("\n\n"); printf("Loading.....\n"); sleep(2);
+
+        DataNorm = fopen("Daftar Akun Normal.dat", "rb");
+        DataNorm_backup = fopen("Dafar Akun Normal Backup.dat", "wb");
+
+        printf("\n");
+        printf("System: Masukan email: \n");
+        printf("/> "); gets(hapusemail);
+        printf("System: Masukan username: \n");
+        printf("/> "); gets(hapususername);
+        printf("System: Masukan password: \n");
+        printf("/> "); gets(hapuspass);
+
+        while(fread(&user, sizeof(struct User), 1, DataNorm)==1){
+            if(strcmp(user.email, hapusemail) != 0 && strcmp(user.username, hapususername) != 0 && strcmp(user.pass, hapuspass)!= 0){
+                fwrite(&user, sizeof(struct User), 1, DataNorm_backup);
+            } else{
+                ditemukan = 1;
+            }
+        }
+        fclose(DataNorm); fclose(DataNorm_backup);
+
+        remove("Daftar Akun Normal.dat");
+        rename("Dafar Akun Normal Backup.dat", "Daftar Akun Normal.dat");
+
+        if(ditemukan == 1){
+            printf("\n"); printf("Sedang dalam proses upgrade akun.....\n"); sleep(2);
+            printf("Proses selesai...\n\n"); sleep(1);
+            printf("Silahkan registrasi di akun premium!!\n"); system("pause"); system("cls");
+            signUp_user_prem();
+        } else {
+            printf("\n"); printf("Loading....\n"); sleep(2);
+            printf("Mohon maaf email, username dan password anda salah!!\n");
+            system("pause"); system("cls"); upgrade_akun_prem();
+        }
+    } else if(pilih == 'N' || pilih == 'n'){
+        printf("Proses kembali ke menu utama...\n"); sleep(2);
+        system("pause");  system("cls"); view_profile_norm();
+    }
+}
+
 void view_profile_norm(){
     int menu;
     fflush(stdin);
@@ -1205,7 +1256,7 @@ void view_profile_norm(){
     switch(menu){
         case 1: system("cls"); search_user_norm(); break;
         case 2: system("cls"); search_lowongan_norm(); break;
-        // case 3: system("cls"); upgrade_akun_prem(); break;
+        case 3: system("cls"); upgrade_akun_prem(); break;
         case 4: system("cls"); dash_user(); break;
         default: printf("Option tidak tersedia, silahkan coba kembali\n");
                 system("pause"); system("cls");

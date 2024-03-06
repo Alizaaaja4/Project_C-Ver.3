@@ -369,6 +369,35 @@ void dash_akun(){
     }
 }   
 
+void acc_notifikasi(){
+    fflush(stdin);
+    int i =0;
+    Notif = fopen("Database Kirim Lamaran.dat", "rb");
+
+    printf("Memeriksa database....\n"); sleep(2); system("cls");
+
+    printf("||              DAFTAR LAMARAN KERJA               ||\n");
+    printf("-----------------------------------------------------\n");
+    while(fread(&user, sizeof(struct User), 1, Notif)==1){
+        printf("Surat Lamran ke-%d\n", i+1);
+        printf("Nama Perusahaan     : %s\n", user.perusahaan);
+        printf("Posisi Pekerjaan    : %s\n", user.posisi);
+        printf("Nama Pelamar        : %s\n", user.namauser);
+        printf("Informasi Kontak    : %s\n", user.kontak);
+        printf("Informasi Email     : %s\n", user.email);
+        printf("-----------------------------------------------------\n");
+        printf("Pendidikan Terakhir : %s\n", user.pendidikan);
+        printf("Deksripsi diri      : %s\n", user.aboutMe);
+        printf("-----------------------------------------------------\n");
+        printf("\n");
+        i++;
+    }
+    fclose(Notif);
+
+    system("pause"); system("cls");
+    dash_admin();
+}
+
 void dash_admin(){
     int menu;
     ban_DLinkedln();
@@ -377,7 +406,8 @@ void dash_admin(){
     printf("|| [2]. Tutup Lowongan Kerja                     ||\n");
     printf("|| [3]. Daftar Lowongan Pekerjaan                ||\n");
     printf("|| [4]. Daftar Akun Linkedln                     ||\n");
-    printf("|| [5]. Logout                                   ||\n");
+    printf("|| [5]. Notifikasi Lamaran Kerja                 ||\n");
+    printf("|| [6]. Logout                                   ||\n");
     printf("----------------------------------------------------\n");
     printf("Option /> "); scanf("%d", &menu); getchar();
     switch(menu){
@@ -385,7 +415,8 @@ void dash_admin(){
         case 2: system("cls"); delate_lowongan(); break;
         case 3: system("cls"); list_lowongan(); break;
         case 4: system("cls"); dash_akun(); break;
-        case 5: system("cls"); main(); break;
+        case 5: system("cls"); acc_notifikasi(); break;
+        case 6: system("cls"); main(); break;
         default: printf("Option tidak tersedia, silahkan coba kembali");
                 system("pause"); system("cls");
                 dash_admin();
@@ -433,7 +464,8 @@ void warning(){
     printf("| +> Melakukan pencarian pengguna LinkedIn.               |\n");
     printf("| +> Melakukan pencarian lowongan kerja.                  |\n");
     printf("| +> Melakukan pendaftaran pada lowongan kerja.           |\n");
-    printf("| +> Menampilkan daftar lowongan yang sudah didaftarkan.  |\n");
+    printf("| +> Mendapatkan notifikasi lamaran yang telah diajukan   |\n");
+    printf("| +> Melakukan change Password dan ID Akun                |\n");
     printf("----------------------------------------------------------\n");
     printf("[B]. Akun Silver                                          \n");
     printf("-----------------------------------------------------------\n");
@@ -884,13 +916,14 @@ void search_user_prem(){
             if(strcmp(user.Nama, cariakun)==0){
                 ditemukan =1;
                 printf("\n\n");
+                ban_DLinkedln();
                 printf("Nama Pengguna : %s\n", user.Nama);
-                printf("-------------------------------------------\n");
+                printf("----------------------------------------------------\n");
                 printf("Pekerjaan     : %s\n", user.pekerjaan);
                 printf("Pendidikan    : %s\n", user.pendidikan);
-                printf("-------------------------------------------\n");
+                printf("----------------------------------------------------\n");
                 printf("Deksripsi     : %s\n", user.aboutMe);
-                printf("-------------------------------------------\n");
+                printf("----------------------------------------------------\n");
                 printf("\n ");
                 break;
             }
@@ -913,12 +946,13 @@ void search_user_prem(){
             if(strcmp(user.Nama, cariakun)==0){
                 ditemukan2 =1;
                 printf("\n\n");
+                ban_DLinkedln();
                 printf("Nama Pengguna : %s\n", user.Nama);
-                printf("-------------------------------------------\n");
+                printf("---------------------------------------------------\n");
                 printf("Pendidikan    : %s\n", user.pendidikan);
-                printf("-------------------------------------------\n");
+                printf("---------------------------------------------------\n");
                 printf("Deksripsi     : %s\n", user.aboutMe);
-                printf("-------------------------------------------\n");
+                printf("---------------------------------------------------\n");
                 printf("\n ");
                 break;
             }
@@ -951,14 +985,15 @@ void search_lowongan_prem(){
         if(strcmp(user.perusahaan, cariperusahaan)==0 && strcmp(user.posisi, cariposisi)==0){
             ditemukan =1;
             printf("\n\n");
+            ban_DLinkedln();
             printf("Perusahaan        : %s\n", user.perusahaan);
-            printf("-------------------------------------------\n");
+            printf("---------------------------------------------------\n");
             printf("Posisi            : %s\n", user.posisi);
             printf("Gaji              : %s\n", user.gaji);
-            printf("-------------------------------------------\n");
+            printf("---------------------------------------------------\n");
             printf("Buka Pendaftaraan : %s\n", user.open);
             printf("Tutup Pendaftaraan: %s\n", user.tutup);
-            printf("-------------------------------------------\n");
+            printf("---------------------------------------------------\n");
             printf("Persyaratan       : \n");
             printf("1. %s\n", user.peryaratan1);
             printf("2. %s\n", user.peryaratan2);
@@ -982,6 +1017,9 @@ void search_lowongan_prem(){
         Notif = fopen("Database Kirim Lamaran.dat", "ab");
 
         printf("||                 FORMULIR PENDAFTARAN                 ||\n");
+        printf("----------------------------------------------------------\n");
+        printf("Kpd Perusahaan  : "); gets(user.perusahaan);
+        printf("Posisi Pekerjaan: "); gets(user.posisi);
         printf("----------------------------------------------------------\n");
         printf("Nama Pelamar    : "); gets(user.namauser);
         printf("Kontak          : "); gets(user.kontak);
@@ -1031,6 +1069,81 @@ void view_profile_prem(){
     }   
 }
 
+void search_user_norm(){
+    int ditemukan = 0; char cariakun[50];
+
+    DataNorm = fopen("Daftar Akun Normal.dat", "rb");
+
+    printf("|| System: Masukan nama pengguna yang ingin dicari!!\n");
+    printf("   /> "); gets(cariakun);
+
+    while(fread(&user, sizeof(struct User), 1, DataNorm)==1){
+        if(strcmp(user.Nama, cariakun)==0){
+        ditemukan =1;
+        printf("\n\n");
+        ban_DLinkedln();
+        printf("Nama Pengguna : %s\n", user.Nama);
+        printf("---------------------------------------------------\n");
+        printf("Pendidikan    : %s\n", user.pendidikan);
+        printf("---------------------------------------------------\n");
+        printf("Deksripsi     : %s\n", user.aboutMe);
+        printf("---------------------------------------------------\n");
+        printf("\n ");
+        break;
+        }
+    }
+    if(ditemukan != 1){
+        printf("Loading.....\n"); sleep(2);
+        printf("Akun User %s tidak ditemukan!!\n", cariakun);
+    }
+    fclose(DataNorm);
+    system("pause"); system("cls"); view_profile_norm();
+}
+
+void search_lowongan_norm(){
+    int ditemukan =0; char cariposisi[50], cariperusahaan[50];
+    DataLowongan = fopen("Daftar Lowongan Pekerjaan.dat", "rb");
+
+    printf("|| System: Masukan nama perusahaan yang ingin dicari!!\n");
+    printf("   /> "); gets(cariperusahaan);
+    printf("\n");
+    printf("|| System: Masukan posisi pekerjaan yang ingin dicari!!\n");
+    printf("   /> "); gets(cariposisi);
+
+    while(fread(&user, sizeof(struct User), 1, DataLowongan)==1){
+        if(strcmp(user.perusahaan, cariperusahaan)==0 && strcmp(user.posisi, cariposisi)==0){
+            ditemukan =1;
+            printf("\n\n");
+            ban_DLinkedln();
+            printf("Perusahaan        : %s\n", user.perusahaan);
+            printf("--------------------------------------------------\n");
+            printf("Posisi            : %s\n", user.posisi);
+            printf("Gaji              : %s\n", user.gaji);
+            printf("--------------------------------------------------\n");
+            printf("Buka Pendaftaraan : %s\n", user.open);
+            printf("Tutup Pendaftaraan: %s\n", user.tutup);
+            printf("--------------------------------------------------\n");
+            printf("Persyaratan       : \n");
+            printf("1. %s\n", user.peryaratan1);
+            printf("2. %s\n", user.peryaratan2);
+            printf("3. %s\n", user.peryaratan3);
+            printf("\n ");
+            break;
+         }
+    }
+    if(ditemukan != 1){
+        printf("Loading.....\n"); sleep(2);
+        printf("Posisi %s di perusahaan %s tidak ditemukan!!\n", cariposisi, cariperusahaan);
+        system("pause"); system("cls"); view_profile_norm();
+    }
+    fclose(DataLowongan);
+
+    printf("System: Mohon maaf akun anda bukan akun premium!!\n");
+    printf("        Anda tidak dapat mendaftar pekerjaan menggunakan akun silver!!\n");
+    printf("        Silahkan untuk mengupgrade akun anda terlebih dahulu!!\n\n");
+    system("pause"); system("cls"); view_profile_norm();
+}
+
 void view_profile_norm(){
     int menu;
     fflush(stdin);
@@ -1043,9 +1156,10 @@ void view_profile_norm(){
     printf("/> "); scanf("%d", &menu); getchar();
 
     switch(menu){
-        // case 1: system("cls"); search_user_norm(); break;
-        // case 2: system("cls"); search_lowongan_norm(); break;
+        case 1: system("cls"); search_user_norm(); break;
+        case 2: system("cls"); search_lowongan_norm(); break;
         // case 3: system("cls"); upgrade_akun_prem(); break;
+        case 4: system("cls"); dash_user(); break;
         default: printf("Option tidak tersedia, silahkan coba kembali\n");
                 system("pause"); system("cls");
                 view_profile_norm();

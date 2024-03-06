@@ -51,25 +51,26 @@ FILE *DataLowongan_backup;
 FILE *DataPrem;
 FILE *DataNorm;
 FILE *Notif;
+FILE *Notif_kirim;
 
 struct User{
     // biodata profile
-    char Nama[50], username[20], email[50], pass[20], kontak[10], alamat[20], pekerjaan[20], aboutMe[50], pengalaman1[300], pengalaman2[300], pengalaman3[300], pendidikan[30];
+    char Nama[500], username[200], email[500], pass[200], kontak[100], alamat[200], pekerjaan[200], aboutMe[500], pengalaman1[300], pengalaman2[300], pengalaman3[300], pendidikan[30];
 
     // klasifikasi jenis akun
     char jenis_akun[50]; // 0101 akun normal dan 1010 akun premium
 
     // lowongan kerja
-    char perusahaan[20], posisi[20], peryaratan1[1000], peryaratan2[1000], peryaratan3[1000], gaji[20], open[20], tutup[20]; 
+    char perusahaan[200], posisi[200], peryaratan1[1000], peryaratan2[1000], peryaratan3[1000], gaji[200], open[20], tutup[20]; 
 
     // lamar pekerjaan
-    char namauser[50];
+    char namauser[500], hasil[100];
 }usernya[1000];
 
 struct User temp;
 struct User user;
 
-char IdUser[50];
+char IdUser[1000];
 
 void ban_DLinkedln() {
     printf("---------------------------------------------------\n");
@@ -371,10 +372,10 @@ void dash_akun(){
 
 void acc_notifikasi(){
     fflush(stdin);
-    int i =0;
+    int i =0; char pilih;
     Notif = fopen("Database Kirim Lamaran.dat", "rb");
 
-    printf("Memeriksa database....\n"); sleep(2); system("cls");
+    printf("Memeriksa database....\n"); sleep(2); 
 
     printf("||              DAFTAR LAMARAN KERJA               ||\n");
     printf("-----------------------------------------------------\n");
@@ -394,8 +395,32 @@ void acc_notifikasi(){
     }
     fclose(Notif);
 
-    system("pause"); system("cls");
-    dash_admin();
+    printf("System: Apakah anda ingin membalas pesan ini? \n");
+    printf(" (y or n) /> "); scanf("%c", &pilih); getchar();
+
+    if(pilih == 'Y' || pilih == 'y'){
+        printf("\nLoading.....\n"); sleep(2); 
+        Notif_kirim = fopen("ACC Lowongan.dat", "ab");
+
+        printf("||          INFORMASI LOWONGAN KERJA           ||\n");
+        printf("-------------------------------------------------\n");
+        printf("Perusahaan   : "); gets(user.perusahaan);
+        printf("Posisi       : "); gets(user.posisi);
+        printf("-------------------------------------------------\n");
+        printf("Nama Pelamar : "); gets(user.namauser);
+        printf("Status       : "); gets(user.hasil);
+        printf("-------------------------------------------------\n");
+
+        fwrite(&user, sizeof(struct User), 1, Notif_kirim);
+        fclose(Notif_kirim);
+
+        printf("\nPesan dalam proses pengiriman....\n"); sleep(2); system("pasue"); 
+        dash_admin();
+    }
+    else if (pilih == 'N' || pilih == 'n'){
+        system("cls"); printf("Proses kembali ke menu utama...\n"); sleep(2);
+        system("pause");  system("cls"); dash_admin();
+    } 
 }
 
 void dash_admin(){
@@ -1027,9 +1052,9 @@ void search_lowongan_prem(){
         printf("----------------------------------------------------------\n");
         printf("Pendidikan      : "); gets(user.pendidikan);
         printf("Deksripsi diri  : "); gets(user.aboutMe);
-        printf("----------------------------------------------------------\n");
+        printf("----------------------------------------------------------\n\n");
         printf("Dengan ini saya melampirkan berkas ini, dengan harapan dapat\n");
-        printf("diterima diposisi %s di perusahaan %s.\n", cariposisi, cariperusahaan);
+        printf("diterima diposisi %s di perusahaan %s.\n\n", cariposisi, cariperusahaan);
 
         fwrite(&user, sizeof(struct User), 1, Notif);
         fclose(Notif);
@@ -1041,6 +1066,28 @@ void search_lowongan_prem(){
         system("cls"); printf("Loading....\n\n"); sleep(2);
         system("pause"); system("cls"); view_profile_prem();
     }
+}
+
+void notifikasi(){
+    fflush(stdin);
+    int i =0;
+    Notif_kirim = fopen("ACC Lowongan.dat", "rb");
+
+    printf("||          Notifikasi D'Linkedln           ||\n");
+    printf("----------------------------------------------\n");
+    while (fread(&user, sizeof(struct User), 1, Notif_kirim)==1){
+        printf("\t\t Notifikasi %d\n", i+1);
+        printf("Perusahaan  : %s\n", user.perusahaan);
+        printf("Posisi      : %s\n", user.posisi);
+        printf("----------------------------------------------\n");
+        printf("Nama Pelamar: %s\n", user.namauser);
+        printf("Status      : %s\n", user.hasil);
+        printf("----------------------------------------------\n");
+        printf("\n");
+        i++;
+    }
+    fclose(Notif_kirim);
+    system("pause"); system("cls"); view_profile_prem();
 }
 
 void view_profile_prem(){
@@ -1060,7 +1107,7 @@ void view_profile_prem(){
         case 2: system("cls"); edit_idakun(); break;
         case 3: system("cls"); search_user_prem(); break;
         case 4: system("cls"); search_lowongan_prem(); break;
-        // case 5: system("cls"); notifikasi(); break;
+        case 5: system("cls"); notifikasi(); break;
         case 6: system("cls"); dash_user(); break;
         default: printf("Option tidak tersedia, silahkan coba kembali\n");
                 system("pause"); system("cls");

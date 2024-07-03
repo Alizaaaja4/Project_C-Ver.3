@@ -1,6 +1,6 @@
 <h1 align="center">🔎 D'Linkedln 🔎</h1>
 
-<p align="center">A simple practice project to deepen your understanding of C programming by building a user-friendly application. This project is the final assignment for the Basic Computer Laboratory course in the even semester.</p>
+<p align="center">A simple practice project to deepen your understanding of C programming by building a user-friendly application. This project is the final assignment for the Basic Computer Laboratory course in the even semester of the 2023/2024 academic year.</p>
 
 ## About 📖
 
